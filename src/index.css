@@ -1,0 +1,215 @@
+@import "tailwindcss";
+
+@theme {
+  --color-warm-white: #faf5ec;
+  --color-off-white: #f2ead9;
+  --color-beige: #e8d9bd;
+  --color-film-gray: #8a7d68;
+  --color-charcoal: #3a3226;
+  --color-soft-black: #14130f;
+  --color-ink: #0a0a08;
+  --color-ember: #c97b3f;
+  --color-gold: #d9a856;
+  --color-sky: #cfe0e8;
+
+  --font-serif: "Cormorant Garamond", "Times New Roman", serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-hand: "Caveat", "Bradley Hand", cursive;
+
+  --ease-cinematic: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    background-color: var(--color-warm-white);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-warm-white);
+    color: var(--color-charcoal);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  @media (max-width: 768px), (hover: none) {
+    body {
+      cursor: auto;
+    }
+  }
+
+  ::selection {
+    background: var(--color-ember);
+    color: var(--color-ink);
+  }
+}
+
+@layer utilities {
+  .font-serif-display {
+    font-family: var(--font-serif);
+  }
+
+  .tracking-cinema {
+    letter-spacing: 0.28em;
+  }
+
+  .font-hand {
+    font-family: var(--font-hand);
+  }
+}
+
+/* A photograph clarifying into focus as it develops — used by RevealImage.
+   Two custom properties so Framer Motion can drive a single filter string. */
+.develop-image {
+  --develop-blur: 18px;
+  --develop-sat: 0.35;
+  filter: blur(var(--develop-blur)) saturate(var(--develop-sat)) contrast(0.94);
+}
+
+/* A warm light-leak sweep, laid over a chapter boundary as a transition —
+   pure gradient + blend mode, no shader pass required. */
+.light-leak {
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(217, 168, 86, 0.55) 42%,
+    rgba(201, 123, 63, 0.65) 50%,
+    rgba(217, 168, 86, 0.55) 58%,
+    transparent 80%
+  );
+  mix-blend-mode: screen;
+}
+
+/* Film grain overlay, animated to avoid a static/dead look. The animated
+   layer sits inside a fixed, viewport-sized, `overflow: hidden` frame and
+   is itself oversized (10% larger on every side) so its `grain-shift`
+   translate can never reveal an edge — a `position: fixed` descendant's
+   transformed box still counts toward the document's scrollable area in
+   Chromium even when an ancestor (or `body`) sets `overflow-x: hidden`,
+   since fixed positioning escapes ordinary ancestor clipping. Without this
+   frame the grain layer intermittently pushed `document.documentElement`
+   a few pixels wider than the viewport, exposing a phantom horizontal
+   scroll on mobile. */
+.grain-overlay-frame {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: hidden;
+  pointer-events: none;
+}
+.grain-overlay {
+  position: absolute;
+  inset: -10%;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC44NSIgbnVtT2N0YXZlcz0iMiIgc3RpdGNoVGlsZXM9InN0aXRjaCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNuKSIvPjwvc3ZnPg==");
+  background-repeat: repeat;
+  animation: grain-shift 8s steps(10) infinite;
+}
+
+@keyframes grain-shift {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-2%, -3%); }
+  20% { transform: translate(-4%, 2%); }
+  30% { transform: translate(2%, -4%); }
+  40% { transform: translate(-2%, 5%); }
+  50% { transform: translate(-4%, 2%); }
+  60% { transform: translate(3%, 0%); }
+  70% { transform: translate(0%, 3%); }
+  80% { transform: translate(-3%, 0%); }
+  90% { transform: translate(2%, 2%); }
+}
+
+@keyframes slow-zoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.12); }
+}
+
+.animate-slow-zoom {
+  animation: slow-zoom 24s var(--ease-cinematic) forwards;
+}
+
+/* Custom cursor */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-warm-white);
+  pointer-events: none;
+  z-index: 200;
+  mix-blend-mode: difference;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(244, 239, 230, 0.6);
+  pointer-events: none;
+  z-index: 200;
+  mix-blend-mode: difference;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+
+/* Hide scrollbar for horizontal film-strip sections without losing scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* A single ring left on the water where the cursor touched — Reflections'
+   own physics, plain CSS so it never touches the WAAPI/Framer machinery. */
+@keyframes reflections-ripple {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(14);
+    opacity: 0;
+  }
+}
+
+/* A hard on/off blink, the way a terminal cursor waits for input — the
+   last thing on the page after everything else has gone quiet. */
+@keyframes blink-caret {
+  0%, 45% { opacity: 1; }
+  50%, 95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.animate-blink-caret {
+  animation: blink-caret 1s step-end infinite;
+}
+
+/* The world keeps moving even if the visitor doesn't scroll — a slow
+   drift of light and cloud-shadow across the entire page, always running
+   on its own clock. Plain CSS, positive durations only, nothing tied to
+   scroll position, so it costs nothing to leave running. */
+@keyframes world-light-drift {
+  0%, 100% { transform: translate(-18%, -12%) rotate(0deg); opacity: 0.45; }
+  50% { transform: translate(14%, 10%) rotate(4deg); opacity: 0.7; }
+}
+@keyframes world-cloud-drift {
+  0% { transform: translateX(-35vw); }
+  100% { transform: translateX(135vw); }
+}
