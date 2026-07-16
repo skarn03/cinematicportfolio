@@ -74,7 +74,7 @@ export default function Bloom() {
           transition={{ duration: 0.7, delay: 0.2, ease: EASE }}
         >
           <p className="font-serif-display text-sm italic tracking-wide text-warm-white/90">Saika Cinematics</p>
-          <p className="mt-1 text-[9px] uppercase tracking-cinema text-warm-white/40">Chapter {bloom.number} &middot; {bloom.name}</p>
+          <p className="mt-1 text-[9px] uppercase tracking-cinema text-warm-white/40">{bloom.archiveLabel}</p>
         </motion.div>
 
         <motion.div

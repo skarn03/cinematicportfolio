@@ -142,12 +142,14 @@ export default function Scene({
   facing = "front",
   dollyStage = "rest",
   dayColors,
+  lowPower = false,
   onShutterHover,
   onShutterClick,
   onScreenHover,
   onScreenClick,
   onFacingComplete,
   onDollyComplete,
+  onContextLost,
 }: {
   phase: ScenePhase;
   shutterTrigger: number;
@@ -155,23 +157,50 @@ export default function Scene({
   facing?: "front" | "back";
   dollyStage?: DollyStage;
   dayColors: DayColors;
+  /** Coarse-pointer, few-CPU-cores devices — the population most likely
+   * to have a GPU driver that kills the context under load. Trims shadow
+   * resolution, antialiasing, and particle counts rather than changing
+   * anything about how the scene looks structurally. */
+  lowPower?: boolean;
   onShutterHover: (hovering: boolean) => void;
   onShutterClick: () => void;
   onScreenHover: (hovering: boolean) => void;
   onScreenClick: () => void;
   onFacingComplete?: () => void;
   onDollyComplete?: () => void;
+  /** Fired once if the GPU context is lost and doesn't recover — Android
+   * in particular can kill a context under memory pressure with no
+   * warning. The parent falls back to a static scene rather than leaving
+   * a permanently blank canvas. */
+  onContextLost?: () => void;
 }) {
-  const [dpr] = useState(() => Math.min(window.devicePixelRatio, 2));
+  const [dpr] = useState(() => Math.min(window.devicePixelRatio, lowPower ? 1.5 : 2));
   const [initialZ] = useState(() => scaleForAspect(BASE_CAMERA_Z, initialWindowAspect()));
 
   return (
     <Canvas
       dpr={dpr}
-      shadows
+      shadows={!lowPower}
       camera={{ position: [0, 0, initialZ], fov: 30 }}
-      gl={{ antialias: true, alpha: true }}
+      gl={{ antialias: !lowPower, alpha: true, powerPreference: "high-performance" }}
       className="absolute! inset-0"
+      onCreated={({ gl }) => {
+        const canvas = gl.domElement;
+        // A context loss must call preventDefault to leave restoration on
+        // the table at all; without it the browser treats the loss as
+        // final immediately. If a restore event never follows within a
+        // few seconds, treat it as final ourselves and fall back.
+        const handleLost = (e: Event) => {
+          e.preventDefault();
+          const restoreTimer = window.setTimeout(() => onContextLost?.(), 4000);
+          canvas.addEventListener(
+            "webglcontextrestored",
+            () => window.clearTimeout(restoreTimer),
+            { once: true },
+          );
+        };
+        canvas.addEventListener("webglcontextlost", handleLost);
+      }}
     >
       {/* The environment is a character too — a real sky, a table underfoot,
           fog and weather — sampled from the same day-cycle driving the DOM
@@ -197,8 +226,8 @@ export default function Scene({
         position={[2.5, 2.5, 3]}
         intensity={dayColors.keyIntensity}
         color={dayColors.keyLight}
-        castShadow
-        shadow-mapSize={[1024, 1024]}
+        castShadow={!lowPower}
+        shadow-mapSize={lowPower ? [512, 512] : [1024, 1024]}
       />
       <directionalLight position={[-3, 0.5, -1.5]} intensity={0.4} color="#f2d9ad" />
       <directionalLight position={[-1.2, 1.7, -4]} intensity={1.15} color="#ffedc4" />
@@ -207,7 +236,7 @@ export default function Scene({
       {/* Procedural, in-scene environment map — no remote HDR fetch, no
           expensive PMREM decode of a downloaded image. This is what was
           causing GPU readback stalls and WebGL context loss for some users. */}
-      <Environment resolution={64} frames={1}>
+      <Environment resolution={lowPower ? 32 : 64} frames={1}>
         <Lightformer intensity={3.2} color="#fffaf0" position={[3, 2, 4]} scale={[4, 3, 1]} />
         <Lightformer intensity={0.55} color="#e4ecee" position={[-4, -1, -3]} scale={[5, 4, 1]} />
         <Lightformer intensity={1.7} color="#f0b876" position={[0, -3, 2]} scale={[3, 2, 1]} />
@@ -228,10 +257,12 @@ export default function Scene({
         </mesh>
       </Billboard>
 
-      {/* Dust filling the air around the camera. */}
-      <Sparkles count={110} scale={[9, 12, 9]} position={[0, 2, 0]} size={1.6} speed={0.12} opacity={0.5} color="#d9a856" />
-      <Sparkles count={60} scale={[6, 10, 6]} position={[0, 2, 0]} size={3.2} speed={0.07} opacity={0.55} color="#c97b3f" />
-      <Sparkles count={40} scale={[12, 14, 12]} position={[0, 2, 0]} size={4.6} speed={0.04} opacity={0.3} color="#8fb8cf" />
+      {/* Dust filling the air around the camera — lighter on low-power
+          devices, since particle count is one of the cheaper knobs to
+          turn down without changing what the scene structurally is. */}
+      <Sparkles count={lowPower ? 45 : 110} scale={[9, 12, 9]} position={[0, 2, 0]} size={1.6} speed={0.12} opacity={0.5} color="#d9a856" />
+      <Sparkles count={lowPower ? 25 : 60} scale={[6, 10, 6]} position={[0, 2, 0]} size={3.2} speed={0.07} opacity={0.55} color="#c97b3f" />
+      <Sparkles count={lowPower ? 15 : 40} scale={[12, 14, 12]} position={[0, 2, 0]} size={4.6} speed={0.04} opacity={0.3} color="#8fb8cf" />
 
       <Rig
         phase={phase}

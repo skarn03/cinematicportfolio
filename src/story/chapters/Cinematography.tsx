@@ -1,10 +1,12 @@
-import { useRef, useState, type PointerEvent } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion, useMotionValue, useMotionTemplate, useTransform } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import CinemaAtmosphere from "../layers/CinemaAtmosphere";
-import { films, type Film } from "../../data/media";
+import CinemaScreeningRoom from "../CinemaScreeningRoom";
+import { films } from "../../data/media";
 
-const [filmA, filmB] = films;
+const EASE = [0.65, 0, 0.35, 1] as const;
+const film = films[0];
 
 function SprocketRow({ position }: { position: "top" | "bottom" }) {
   return (
@@ -16,105 +18,51 @@ function SprocketRow({ position }: { position: "top" | "bottom" }) {
   );
 }
 
-/** Half of the split screen — a poster that becomes its trailer on hover,
- * clipped to whatever the divider currently allows through. */
-function ScreenHalf({
-  film,
-  side,
-  clipPath,
-  onOpen,
-}: {
-  film: Film;
-  side: "left" | "right";
-  clipPath: ReturnType<typeof useMotionTemplate>;
-  onOpen: (film: Film) => void;
-}) {
-  const videoRef = useRef<HTMLVideoElement>(null);
+/** The projection wall — a single real film, presented as a poster until
+ * asked to run. No hover-scrub preview (that trick needs a raw video file
+ * to seek through; this is a YouTube embed, played straight through once
+ * it's actually opened, the way any cinema screen works). */
+function Screen({ onOpen }: { onOpen: () => void }) {
   const [hovered, setHovered] = useState(false);
-
   return (
     <motion.button
       type="button"
       data-cursor-hover
-      onClick={() => onOpen(film)}
-      onMouseEnter={() => {
-        setHovered(true);
-        videoRef.current?.play().catch(() => {});
-      }}
-      onMouseLeave={() => {
-        setHovered(false);
-        videoRef.current?.pause();
-      }}
+      onClick={onOpen}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       className="absolute inset-0 h-full w-full cursor-pointer overflow-hidden text-left"
-      style={{ clipPath }}
     >
-      <img src={film.poster} alt={`${film.title} poster`} className="absolute inset-0 h-full w-full object-cover transition-opacity duration-700" style={{ opacity: hovered ? 0 : 1 }} />
-      <video ref={videoRef} src={film.video} muted loop playsInline className="absolute inset-0 h-full w-full scale-105 object-cover transition-opacity duration-700" style={{ opacity: hovered ? 1 : 0 }} />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/5 to-transparent" />
-      <div className={`absolute bottom-8 z-10 md:bottom-12 ${side === "left" ? "left-5 md:left-10" : "right-5 text-right md:right-10"}`}>
-        <p className="font-serif-display text-lg italic text-warm-white md:text-2xl">{film.title}</p>
-        <p className="mt-1 text-[10px] uppercase tracking-cinema text-warm-white/60">
-          {film.year} &middot; {film.duration}
-        </p>
+      <img
+        src={film.poster}
+        alt={`${film.title} — poster`}
+        className="absolute inset-0 h-full w-full scale-105 object-cover transition-transform duration-700"
+        style={{ transform: hovered ? "scale(1.1)" : "scale(1.05)" }}
+      />
+      <div className="absolute inset-0 bg-linear-to-t from-ink/85 via-ink/10 to-ink/30 transition-opacity duration-500" style={{ opacity: hovered ? 0.9 : 0.75 }} />
+
+      <motion.div
+        className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-warm-white/60 bg-ink/40 backdrop-blur-sm md:h-20 md:w-20"
+        animate={{ scale: hovered ? 1.08 : 1, opacity: hovered ? 1 : 0.85 }}
+        transition={{ duration: 0.4, ease: EASE }}
+      >
+        <svg width="20" height="22" viewBox="0 0 20 22" fill="none" className="ml-1">
+          <path d="M1 1L19 11L1 21V1Z" fill="#faf5ec" />
+        </svg>
+      </motion.div>
+
+      <div className="absolute bottom-8 left-5 z-10 md:bottom-12 md:left-10">
+        <p className="font-serif-display text-xl italic text-warm-white md:text-3xl">{film.title}</p>
+        <p className="mt-1.5 text-[10px] uppercase tracking-cinema text-warm-white/60">{film.channel}</p>
       </div>
     </motion.button>
   );
 }
 
-function CinemaMode({ film, onClose }: { film: Film; onClose: () => void }) {
-  return (
-    <motion.div
-      className="fixed inset-0 z-80 flex items-center justify-center bg-black"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <video src={film.video} controls autoPlay playsInline poster={film.poster} className="max-h-full w-full" />
-      <button
-        type="button"
-        data-cursor-hover
-        onClick={onClose}
-        className="absolute right-6 top-6 text-[10px] uppercase tracking-cinema text-warm-white/70 hover:text-warm-white"
-      >
-        Close
-      </button>
-    </motion.div>
-  );
-}
-
-/** Chapter Eight — the two films aren't tiles in a grid, they're a single
- * projection wall split down the middle. Drag the divider and the wall
- * itself redistributes — more of one film, less of the other — rather
- * than anything simply enlarging. */
+/** Chapter Eight — one real film gets the whole projection wall to itself.
+ * A photograph is a word; this is the full sentence. */
 export default function Cinematography() {
-  const [openFilm, setOpenFilm] = useState<Film | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const draggingRef = useRef(false);
-  const dividerX = useMotionValue(50);
-  const leftInset = useTransform(dividerX, (v) => 100 - v);
-  const leftClip = useMotionTemplate`inset(0 ${leftInset}% 0 0)`;
-  const rightClip = useMotionTemplate`inset(0 0 0 ${dividerX}%)`;
-  const handleLeft = useMotionTemplate`${dividerX}%`;
-
-  const updateFromClientX = (clientX: number) => {
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const pct = ((clientX - rect.left) / rect.width) * 100;
-    dividerX.set(Math.min(90, Math.max(10, pct)));
-  };
-
-  const handlePointerDown = (e: PointerEvent<HTMLDivElement>) => {
-    draggingRef.current = true;
-    e.currentTarget.setPointerCapture(e.pointerId);
-  };
-  const handlePointerMove = (e: PointerEvent<HTMLDivElement>) => {
-    if (!draggingRef.current) return;
-    updateFromClientX(e.clientX);
-  };
-  const stopDragging = () => {
-    draggingRef.current = false;
-  };
+  const [open, setOpen] = useState(false);
 
   return (
     <section id="cinema-section" data-cursor-kind="video" className="relative w-full bg-charcoal py-24 md:py-32">
@@ -129,44 +77,28 @@ export default function Cinematography() {
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.9 }}
         >
-          Two short films — a full sentence, where a photograph is only ever a word.
+          One short film — a full sentence, where a photograph is only ever a word.
         </motion.p>
       </div>
 
       <motion.div
-        ref={containerRef}
         className="relative mx-auto mt-14 aspect-video w-[92vw] max-w-5xl select-none overflow-hidden bg-ink shadow-2xl shadow-black/60"
         initial={{ opacity: 0, scale: 0.97 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 1, ease: [0.65, 0, 0.35, 1] }}
-        onPointerMove={handlePointerMove}
-        onPointerUp={stopDragging}
+        transition={{ duration: 1, ease: EASE }}
       >
         <SprocketRow position="top" />
         <SprocketRow position="bottom" />
-
-        <ScreenHalf film={filmA} side="left" clipPath={leftClip} onOpen={setOpenFilm} />
-        <ScreenHalf film={filmB} side="right" clipPath={rightClip} onOpen={setOpenFilm} />
-
-        {/* the seam */}
-        <motion.div className="pointer-events-none absolute inset-y-0 z-20 w-px bg-warm-white/60" style={{ left: handleLeft }} />
-        <motion.div
-          data-cursor-hover
-          className="absolute top-1/2 z-30 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-full border border-warm-white/50 bg-ink/70 backdrop-blur-sm"
-          style={{ left: handleLeft }}
-          onPointerDown={handlePointerDown}
-        >
-          <span className="text-xs text-warm-white/80">&#8596;</span>
-        </motion.div>
+        <Screen onOpen={() => setOpen(true)} />
       </motion.div>
 
-      <p className="mt-6 px-6 text-center font-mono text-[9px] uppercase tracking-cinema text-warm-white/30 md:px-14">
-        Drag the seam &middot; one wall, two films
-      </p>
+      <p className="mt-6 px-6 text-center font-mono text-[9px] uppercase tracking-cinema text-warm-white/30 md:px-14">Click to play</p>
 
       {createPortal(
-        <AnimatePresence>{openFilm && <CinemaMode film={openFilm} onClose={() => setOpenFilm(null)} />}</AnimatePresence>,
+        <AnimatePresence>
+          {open && <CinemaScreeningRoom title={film.title} youtubeId={film.youtubeId} onClose={() => setOpen(false)} />}
+        </AnimatePresence>,
         document.body,
       )}
     </section>

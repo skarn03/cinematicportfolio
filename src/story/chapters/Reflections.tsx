@@ -5,6 +5,7 @@ import { useLightbox } from "../Lightbox";
 import { useRegisterChapterSection, useChapterTheme } from "../ChapterTheme";
 import ReflectionsAtmosphere from "../layers/ReflectionsAtmosphere";
 import FieldNotebookMargin from "../FieldNotebookMargin";
+import GlassCase from "../gallery/GlassCase";
 import { notebookNotes } from "../../data/notebook";
 import { chapters } from "../../data/media";
 
@@ -151,7 +152,7 @@ export default function Reflections() {
       <div className="relative z-10 px-6 md:px-14">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <Kicker number={reflections.number} tone="light" accent={theme.earth}>
-            {reflections.name}
+            {reflections.archiveLabel}
           </Kicker>
           <span className="flex items-center gap-1.5 font-mono text-[8px] uppercase tracking-wider" style={{ color: `${tint}cc` }}>
             <motion.span className="h-1.5 w-1.5 rounded-full" style={{ background: tint }} animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }} />
@@ -185,13 +186,16 @@ export default function Reflections() {
 
       <div className="relative z-10 mt-16 flex flex-col items-center gap-14 px-6 md:mt-24 md:flex-row md:items-start md:justify-center md:gap-12 md:px-14">
         <DevelopingPrint src={printA.src} alt={printA.title} story={printA.story} onClick={() => open(printA.src, printA.title)} rotate={-3} delay={0} />
-        <DevelopingPrint src={printB.src} alt={printB.title} story={printB.story} onClick={() => open(printB.src, printB.title)} rotate={2.5} delay={0.15} />
       </div>
 
       <div className="relative z-10 mt-16 flex items-center justify-center gap-3 md:mt-20">
         <TimerDial tint={tint} />
         <p className="font-mono text-[8px] uppercase tracking-wider text-warm-white/30">Developer &middot; 20&deg;C</p>
       </div>
+
+      {/* The second print doesn't develop in the tray with the first — it's
+          already dry, already under glass, its own kind of stillness. */}
+      <GlassCase photo={printB} index={2} chapterNumber={reflections.number} onOpen={() => open(printB.src, printB.title)} tone="dark" />
     </section>
   );
 }

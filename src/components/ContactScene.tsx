@@ -214,6 +214,7 @@ export default function ContactScene() {
     <AnimatePresence>
       {request && (
         <motion.div
+          data-lenis-prevent
           className="fixed inset-0 z-95 flex items-center justify-center overflow-y-auto overscroll-contain px-6 py-16"
           style={{ background: "radial-gradient(circle at 50% 38%, #fdf6e8 0%, #f3e6c9 55%, #e8d5a8 100%)" }}
           initial={{ opacity: 0, backdropFilter: "blur(0px)" }}

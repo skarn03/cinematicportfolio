@@ -5,9 +5,10 @@ import HappyAccidents from "./HappyAccidents";
 import HiddenDiscoveries from "./HiddenDiscoveries";
 import WorldClock from "./WorldClock";
 import FilmstripNav from "./FilmstripNav";
-import ContactShortcut from "./ContactShortcut";
+import Navbar from "./Navbar";
 import AgingWrapper from "./AgingWrapper";
 import ContactScene from "../components/ContactScene";
+import ArchiveRoom from "../archive/ArchiveRoom";
 import { SiteRhythmProvider } from "./SiteRhythm";
 import { LightboxProvider } from "./Lightbox";
 import { useChapterTheme } from "./ChapterTheme";
@@ -49,8 +50,9 @@ export default function Story({ onReachEnd }: { onReachEnd: () => void }) {
           <HappyAccidents />
           <HiddenDiscoveries />
           <FilmstripNav />
-          <ContactShortcut />
+          <Navbar />
           <ContactScene />
+          <ArchiveRoom />
           <AgingWrapper>
             <Bloom />
           </AgingWrapper>

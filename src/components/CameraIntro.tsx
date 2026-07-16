@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useRef, useState, type WheelEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Scene from "../three/Scene";
+import SceneFallback from "./SceneFallback";
+import WebGLErrorBoundary from "./WebGLErrorBoundary";
 import { useCameraSoundEffects } from "../hooks/useCameraSoundEffects";
 import { sampleDayCycle } from "../lib/dayCycle";
+import { isWebGLAvailable, isLikelyLowPowerDevice } from "../lib/webgl";
 
 type Phase = "dark" | "emerge" | "idle";
 type DollyStage = "rest" | "close";
@@ -216,6 +219,11 @@ export default function CameraIntro({
   const [showTitleCard, setShowTitleCard] = useState(false);
   const [screenHovering, setScreenHovering] = useState(false);
   const [dayProgress, setDayProgress] = useState(0.32);
+  // Checked once, synchronously, before the first paint — cheaper than an
+  // effect, and it means a device that can't do WebGL never even attempts
+  // to mount the Canvas in the first place.
+  const [webglBroken, setWebglBroken] = useState(() => !isWebGLAvailable());
+  const [lowPower] = useState(isLikelyLowPowerDevice);
   const firedRef = useRef(false);
   const enterFiredRef = useRef(false);
 
@@ -262,28 +270,30 @@ export default function CameraIntro({
     playShutter();
     setShutterTrigger((n) => n + 1);
 
-    // Flash and turn together, right on the click — no gap for the camera
-    // to sit still in before it starts moving. Flipping `captured` turns
-    // `facing` to "back" below, which starts the single slow spin;
-    // handleFacingComplete is what starts the zoom-in once it settles.
-    // Closing mode already faces back, so there's no spin to wait on — it
-    // zooms straight in.
+    // The flash reads as the actual exposure — it fires alone, first, the
+    // way a real shutter flash would. The turn only starts once that
+    // moment has actually registered, not in the same instant as the
+    // click; a flash and a turn beginning simultaneously reads as the
+    // camera reacting to being clicked, not as a photograph being taken.
     setFlashing(true);
-    setCaptured(true);
-    if (mode === "closing") setDollyStage("close");
 
-    setTimeout(() => setFlashing(false), 550);
+    setTimeout(() => {
+      setCaptured(true);
+      if (mode === "closing") setDollyStage("close");
+    }, 260);
+
+    setTimeout(() => setFlashing(false), 560);
   };
 
   // If a first-time visitor doesn't realize the camera itself is the
   // button, don't leave them stalled on the opening screen — press the
-  // shutter for them once it's been reachable for a couple of seconds
-  // with no click.
+  // shutter for them once it's been reachable for a few seconds with no
+  // click.
   useEffect(() => {
     if (mode !== "opening" || phase !== "idle" || captured) return;
     const timer = setTimeout(() => {
       if (!firedRef.current) handleShutterClick();
-    }, 2000);
+    }, 4000);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, phase, captured]);
@@ -309,6 +319,15 @@ export default function CameraIntro({
   };
 
   const showHero = phase === "idle" && !firedRef.current && !flashing;
+
+  // Some Android devices report a WebGL-capable browser but can't
+  // actually sustain a context (GPU process crashed, driver blocklisted,
+  // out of memory) — when that's true, or once a live context is lost and
+  // doesn't come back, skip the 3D camera entirely rather than leave a
+  // visitor looking at a blank screen where the opening used to be.
+  if (webglBroken) {
+    return <SceneFallback capturedImage={capturedImage} sentence={sentence} onEnter={requestEnter} />;
+  }
 
   return (
     <div
@@ -338,20 +357,24 @@ export default function CameraIntro({
         animate={{ opacity: phase === "dark" ? 0.15 : 1 }}
         transition={{ duration: 1.4, ease: [0.65, 0, 0.35, 1] }}
       >
-        <Scene
-          phase={phase}
-          shutterTrigger={shutterTrigger}
-          capturedImage={captured ? capturedImage : null}
-          facing={mode === "closing" || captured ? "back" : "front"}
-          dollyStage={dollyStage}
-          dayColors={dayColors}
-          onShutterHover={setHovering}
-          onShutterClick={handleShutterClick}
-          onScreenHover={setScreenHovering}
-          onScreenClick={handleScreenClick}
-          onFacingComplete={handleFacingComplete}
-          onDollyComplete={handleDollyComplete}
-        />
+        <WebGLErrorBoundary fallback={<SceneFallback capturedImage={capturedImage} sentence={sentence} onEnter={requestEnter} />}>
+          <Scene
+            phase={phase}
+            shutterTrigger={shutterTrigger}
+            capturedImage={captured ? capturedImage : null}
+            facing={mode === "closing" || captured ? "back" : "front"}
+            dollyStage={dollyStage}
+            dayColors={dayColors}
+            lowPower={lowPower}
+            onShutterHover={setHovering}
+            onShutterClick={handleShutterClick}
+            onScreenHover={setScreenHovering}
+            onScreenClick={handleScreenClick}
+            onFacingComplete={handleFacingComplete}
+            onDollyComplete={handleDollyComplete}
+            onContextLost={() => setWebglBroken(true)}
+          />
+        </WebGLErrorBoundary>
       </motion.div>
 
       {/* Editorial fragments drifting around the camera while it's still

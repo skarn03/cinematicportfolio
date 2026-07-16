@@ -6,7 +6,7 @@ import CinematicFullscreen from "../gallery/CinematicFullscreen";
 import FloatingPrint from "../gallery/FloatingPrint";
 import EditorialSpread from "../gallery/EditorialSpread";
 import Diptych from "../gallery/Diptych";
-import MuseumWall from "../gallery/MuseumWall";
+import ViewfinderReveal from "../gallery/ViewfinderReveal";
 import BurstSequence from "../gallery/BurstSequence";
 import { useLightbox } from "../Lightbox";
 import { useRegisterChapterSection, useChapterTheme } from "../ChapterTheme";
@@ -112,7 +112,7 @@ export default function Streets() {
       <StreetsAtmosphere />
       <div className="mb-10 px-6 md:px-14">
         <Kicker number={streets.number} tone="light" accent={theme.earth}>
-          {streets.name}
+          {streets.archiveLabel}
         </Kicker>
         <motion.p
           className="mt-6 max-w-xl font-serif-display text-2xl italic text-warm-white md:text-4xl"
@@ -212,7 +212,7 @@ export default function Streets() {
         onOpen={(p) => open(p.src, p.title)}
       />
 
-      <MuseumWall photo={CORNER_CROSSING} index={18} chapterNumber={streets.number} glow={streets.palette.accent} onOpen={() => open(CORNER_CROSSING.src, CORNER_CROSSING.title)} tone="dark" />
+      <ViewfinderReveal photo={CORNER_CROSSING} index={18} chapterNumber={streets.number} onOpen={() => open(CORNER_CROSSING.src, CORNER_CROSSING.title)} tone="dark" />
 
       {/* The one the editor actually circled, pulled off the sheet and
           given the room a keeper deserves. */}

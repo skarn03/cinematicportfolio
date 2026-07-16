@@ -117,7 +117,7 @@ export default function Dusk() {
         viewport={{ once: true }}
         transition={{ duration: 1.2, delay: 0.5 }}
       >
-        Chapter {dusk.number} &middot; {dusk.name}
+        {dusk.archiveLabel}
       </motion.p>
 
       <div className="relative z-10 mt-16 w-full">

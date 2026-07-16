@@ -1,7 +1,7 @@
 import { motion, useScroll, useVelocity, useSpring, useTransform, useMotionTemplate } from "framer-motion";
 import LightLeak from "../LightLeak";
 import WaterWipe from "../WaterWipe";
-import MuseumWall from "../gallery/MuseumWall";
+import GalleryHang from "../gallery/GalleryHang";
 import Diptych from "../gallery/Diptych";
 import EditorialSpread from "../gallery/EditorialSpread";
 import CinematicFullscreen from "../gallery/CinematicFullscreen";
@@ -63,7 +63,7 @@ export default function Wander() {
         className="pointer-events-none absolute left-3 top-1/2 hidden -translate-y-1/2 font-mono text-[10px] uppercase tracking-cinema text-charcoal/30 md:block"
         style={{ writingMode: "vertical-rl" }}
       >
-        Chapter {wander.number} &middot; {wander.name}
+        {wander.archiveLabel}
       </div>
 
       <motion.div
@@ -109,7 +109,7 @@ export default function Wander() {
       </motion.p>
 
       <div className="mt-16 md:mt-24">
-        <MuseumWall photo={forestPath} index={2} chapterNumber={wander.number} glow={wander.palette.accent} onOpen={() => open(forestPath.src, forestPath.title)} tone="light" />
+        <GalleryHang photo={forestPath} index={2} chapterNumber={wander.number} onOpen={() => open(forestPath.src, forestPath.title)} tone="light" />
         <Diptych
           a={boardwalkA}
           b={boardwalkB}

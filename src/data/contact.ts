@@ -10,7 +10,7 @@
  * instead of dead links.
  */
 
-export type SocialIcon = "instagram" | "youtube" | "vimeo" | "tiktok" | "behance" | "linkedin" | "other";
+export type SocialIcon = "instagram";
 
 export type SocialLink = {
   platform: string;
@@ -36,11 +36,6 @@ export const contactLinks = {
 
   socials: [
     { platform: "Instagram", handle: "@your-handle", url: "", icon: "instagram", description: "Behind the scenes and new work first" },
-    { platform: "YouTube", handle: "@your-handle", url: "", icon: "youtube", description: "Short films and cinematography" },
-    { platform: "Vimeo", handle: "@your-handle", url: "", icon: "vimeo", description: "Full projects and reels" },
-    { platform: "TikTok", handle: "@your-handle", url: "", icon: "tiktok", description: "" },
-    { platform: "Behance", handle: "@your-handle", url: "", icon: "behance", description: "Full case studies" },
-    { platform: "LinkedIn", handle: "@your-handle", url: "", icon: "linkedin", description: "" },
   ] as SocialLink[],
 };
 

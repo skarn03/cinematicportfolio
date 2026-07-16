@@ -84,6 +84,27 @@ export default function Home({ onArrive }: { onArrive: () => void }) {
           <p className="mt-3 font-mono text-[9px] uppercase tracking-cinema text-warm-white/40">&mdash; Sahil Karn, Staff Photographer</p>
         </motion.div>
 
+        {/* This looks like a cover page — masthead, photo, byline — and a
+            visitor who doesn't already know the roll keeps going past
+            "Chapter X" has no reason to scroll further. A quiet, moving
+            cue at the very bottom (below the byline, never competing with
+            it) says there's more without breaking the front-page stillness
+            above it. Shares the same fade as the rest of the page, so it
+            never lingers once the closing sequence actually begins. */}
+        <motion.div className="pointer-events-none absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-1.5 md:bottom-6" style={{ opacity }}>
+          <span className="font-mono text-[8px] uppercase tracking-cinema text-warm-white/35">Keep scrolling</span>
+          <motion.svg
+            width="14"
+            height="8"
+            viewBox="0 0 14 8"
+            fill="none"
+            animate={{ y: [0, 5, 0], opacity: [0.35, 0.75, 0.35] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <path d="M1 1L7 7L13 1" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" className="text-warm-white" />
+          </motion.svg>
+        </motion.div>
+
         {/* The empty page — everything above has faded to nothing by the
             time this arrives, so it reads as the page itself going quiet,
             not a new screen replacing an old one. */}

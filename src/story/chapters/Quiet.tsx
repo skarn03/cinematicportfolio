@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useLightbox } from "../Lightbox";
 import { useRegisterChapterSection, useChapterTheme } from "../ChapterTheme";
 import FieldNotebookMargin from "../FieldNotebookMargin";
+import LightTable from "../gallery/LightTable";
 import { notebookNotes } from "../../data/notebook";
 import { chapters } from "../../data/media";
 
@@ -66,7 +67,7 @@ export default function Quiet() {
         <CoffeeRing className="right-10 top-6 h-16 w-16 md:right-16 md:top-10" />
 
         <motion.p className="relative font-mono text-[9px] uppercase tracking-cinema" style={{ color: theme.earth }}>
-          {quiet.number} &middot; {quiet.name}
+          {quiet.archiveLabel}
         </motion.p>
         <motion.p
           className="relative mt-5 max-w-md font-serif-display text-2xl italic text-charcoal md:text-4xl"
@@ -104,23 +105,12 @@ export default function Quiet() {
         transition={{ duration: 0.9, ease: EASE }}
       >
         <SpiralBinding />
-        <div className="relative grid grid-cols-1 gap-8 sm:grid-cols-2 sm:items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 24, rotate: 2 }}
-            whileInView={{ opacity: 1, y: 0, rotate: 1.5 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.9, ease: EASE }}
-          >
-            <div data-cursor-hover onClick={() => open(secondary.src, secondary.title)} className="relative cursor-pointer p-1.5">
-              <PhotoCorners />
-              <img src={secondary.src} alt={secondary.title} loading="lazy" className="aspect-4/5 w-full object-cover shadow-lg shadow-charcoal/20" style={{ objectPosition: secondary.focalPoint }} />
-            </div>
-          </motion.div>
+        <div className="relative mx-auto max-w-sm">
           <motion.div
             className="relative bg-off-white p-5 shadow-xl shadow-charcoal/15"
             initial={{ opacity: 0, y: 20, rotate: -6 }}
             whileInView={{ opacity: 1, y: 0, rotate: -2 }}
-            whileHover={{ rotate: 0, scale: 1.03, boxShadow: "0 20px 40px rgba(58,50,38,0.3)" }}
+            whileHover={{ rotate: 0, scale: 1.03, boxShadow: "0 20px 40px rgba(58,50,38,0.3)", transition: { duration: 0.5, ease: EASE } }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.9, delay: 0.2, ease: EASE }}
           >
@@ -136,6 +126,11 @@ export default function Quiet() {
           </motion.div>
         </div>
       </motion.div>
+
+      {/* The second print doesn't sit taped to the page — it rests on the
+          light table instead, the way the quietest print of the four
+          deserves a moment of actual inspection. */}
+      <LightTable photos={[secondary]} onOpen={() => open(secondary.src, secondary.title)} tone="dark" />
 
       {/* Page three — a small photograph, tucked into the last page. */}
       <motion.div

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import CameraIntro from "./CameraIntro";
 import RewindOverlay from "./RewindOverlay";
 import Story from "../story/Story";
+import { useLenis } from "../lib/lenis";
 import { heroImage, closingImage } from "../data/media";
 
 const HERO_IMAGE = heroImage.src;
@@ -27,6 +28,7 @@ const EASE = [0.65, 0, 0.35, 1] as const;
 type Phase = "intro" | "entering" | "story" | "leaving" | "exiting" | "outro";
 
 export default function Experience() {
+  useLenis();
   const [phase, setPhase] = useState<Phase>("intro");
   const [storyKey, setStoryKey] = useState(0);
   const [startZoomOut, setStartZoomOut] = useState(false);

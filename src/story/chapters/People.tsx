@@ -57,8 +57,7 @@ function ScrapPhoto({
             onClick={onClick}
             className="cursor-pointer bg-warm-white p-1.5 shadow-xl shadow-charcoal/25"
             style={{ clipPath: TORN_EDGE }}
-            whileHover={{ scale: 1.03, zIndex: 20 }}
-            transition={{ duration: 0.4 }}
+            whileHover={{ scale: 1.03, zIndex: 20, transition: { duration: 0.5, ease: EASE } }}
           >
             <img src={src} alt={alt} className="w-full object-cover" style={{ aspectRatio: "4 / 5" }} />
           </motion.div>
@@ -89,7 +88,7 @@ export default function People() {
     >
       <FieldNotebookMargin note={notebookNotes.people} dock="top" align="right" rotate={1} tone="light" />
       <Kicker number={people.number} accent={theme.earth}>
-        {people.name}
+        {people.archiveLabel}
       </Kicker>
       <p className="mt-6 max-w-lg font-serif-display text-2xl italic text-charcoal md:text-4xl">{people.headline}</p>
 

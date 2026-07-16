@@ -62,6 +62,9 @@ export type Chapter = {
   id: ChapterId;
   number: string;
   name: string;
+  /** the archival tag shown in the chapter's kicker — a folder label, not
+   * a section heading */
+  archiveLabel: string;
   headline: string;
   palette: Palette;
   photos: Photo[];
@@ -91,6 +94,7 @@ export const chapters: Chapter[] = [
     id: "bloom",
     number: "I",
     name: "Bloom",
+    archiveLabel: "ARCHIVE 01 · SPRING NEGATIVES",
     headline: "Nine frames, one afternoon, the same pond.",
     palette: {
       background: "#f3ecdf",
@@ -188,6 +192,7 @@ export const chapters: Chapter[] = [
     id: "reflections",
     number: "II",
     name: "Reflections",
+    archiveLabel: "COLLECTION NO. 02 · STILL WATER",
     headline: "Two frames, thirty seconds apart.",
     palette: {
       background: "#e2e9e4",
@@ -222,6 +227,7 @@ export const chapters: Chapter[] = [
     id: "wander",
     number: "III",
     name: "Wander",
+    archiveLabel: "THE WALK HOME",
     headline: "A few hours around one lake, most of it on foot.",
     palette: {
       background: "#ecdfc4",
@@ -292,6 +298,7 @@ export const chapters: Chapter[] = [
     id: "streets",
     number: "IV",
     name: "Streets",
+    archiveLabel: "CONTACT SHEET · THAMEL",
     headline: "Thamel, mostly on foot, camera never really down.",
     palette: {
       background: "#ddc9a8",
@@ -479,6 +486,7 @@ export const chapters: Chapter[] = [
     id: "durbar",
     number: "V",
     name: "Durbar",
+    archiveLabel: "FIELD NOTES · DURBAR SQUARE",
     headline: "An hour in the square, mostly by the same stone lion.",
     palette: {
       background: "#e4d7bd",
@@ -603,6 +611,7 @@ export const chapters: Chapter[] = [
     id: "people",
     number: "VI",
     name: "People",
+    archiveLabel: "OBSERVATION LOG · STRANGERS",
     headline: "Five strangers, five different afternoons.",
     palette: {
       background: "#e9e0c9",
@@ -664,6 +673,7 @@ export const chapters: Chapter[] = [
     id: "quiet",
     number: "VII",
     name: "Quiet",
+    archiveLabel: "SMALL THINGS",
     headline: "Four rooms, none of them loud.",
     palette: {
       background: "#e6e0cf",
@@ -716,6 +726,7 @@ export const chapters: Chapter[] = [
     id: "dusk",
     number: "VIII",
     name: "Dusk",
+    archiveLabel: "THE LIGHT CHANGED",
     headline: "The last twenty minutes of light.",
     palette: {
       background: "#e8caa1",
@@ -797,27 +808,20 @@ export const nav = {
 export type Film = {
   id: string;
   title: string;
-  year: string;
-  duration: string;
+  /** the channel that published it — real credit, not a made-up studio name */
+  channel: string;
   poster: string;
-  video: string;
+  /** YouTube video id — embedded via youtube-nocookie, not a raw file */
+  youtubeId: string;
 };
 
+/** Real work, not stand-ins — as more of these exist, they join this array. */
 export const films: Film[] = [
   {
-    id: "sintel",
-    title: "Sintel",
-    year: "2010",
-    duration: "1:32",
-    poster: "https://media.w3.org/2010/05/sintel/poster.png",
-    video: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
-  },
-  {
-    id: "elephants-dream",
-    title: "Elephant's Dream",
-    year: "2006",
-    duration: "10:53",
-    poster: "https://archive.org/services/get-item-image.php?identifier=ElephantsDream",
-    video: "https://archive.org/download/ElephantsDream/ed_1024.mp4",
+    id: "cinematic-new-york",
+    title: "A Cinematic New York",
+    channel: "Saika Cinematics",
+    poster: "https://i.ytimg.com/vi/28VrF5UmScc/hqdefault.jpg",
+    youtubeId: "28VrF5UmScc",
   },
 ];

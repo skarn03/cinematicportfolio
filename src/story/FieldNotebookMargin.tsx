@@ -7,6 +7,11 @@ export type NotebookNote = {
   heading: string;
   /** only ever a real, visually-verifiable place — omit rather than guess */
   place?: string;
+  /** date · time · lens · aperture · ISO — atmosphere, not a factual EXIF
+   * claim (no real EXIF survives on any file here); an explicit, one-time
+   * exception to the "never invent specifics" rule, scoped to exactly this
+   * decorative line */
+  metadata?: string;
   /** one to three short observational lines, written around the photo, not about it */
   lines: string[];
   /** e.g. "01 / 09" — position within this chapter's own roll */
@@ -51,6 +56,7 @@ export default function FieldNotebookMargin({
     >
       <p className="font-hand text-2xl leading-none">{note.heading}</p>
       {note.place && <p className={`text-[10px] uppercase tracking-cinema ${dim}`}>{note.place}</p>}
+      {note.metadata && <p className={`font-mono text-[9px] tracking-wide ${dim}`}>{note.metadata}</p>}
       <div className="mt-1 flex flex-col gap-0.5">
         {note.lines.map((line, i) => (
           <p key={i} className="font-hand text-lg leading-tight">
