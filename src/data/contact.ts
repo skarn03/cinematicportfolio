@@ -35,7 +35,7 @@ export const contactLinks = {
   mailBody: "Hi Sahil,\n\nI came across your portfolio and would love to discuss…",
 
   socials: [
-    { platform: "Instagram", handle: "@your-handle", url: "", icon: "instagram", description: "Behind the scenes and new work first" },
+    { platform: "Instagram", handle: "@saika_cinematics", url: "https://www.instagram.com/saika_cinematics/", icon: "instagram", description: "Behind the scenes and new work first" },
   ] as SocialLink[],
 };
 
