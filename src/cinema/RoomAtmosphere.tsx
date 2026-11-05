@@ -9,7 +9,7 @@ import { photoAtmosphere } from './photoAtmosphere';
 
 type Particle = {x:number;y:number;size:number;phase:number;drift:number};
 
-const modes:AtmosphereMode[]=['fireflies','dust','petals','silver','projector','leaves','embers','stars','sakura'];
+const modes:AtmosphereMode[]=['fireflies','dust','petals','silver','projector','leaves','embers','stars','sakura','rain','lamps'];
 export default function RoomAtmosphere({room,photo,paused,onToggle,controls=true}:{room:string;photo?:Frame|null;paused:boolean;onToggle:()=>void;controls?:boolean}) {
   const reduced=useReducedMotion();
   const canvas=useRef<HTMLCanvasElement>(null);
@@ -23,7 +23,7 @@ export default function RoomAtmosphere({room,photo,paused,onToggle,controls=true
     const ctx=surface.getContext('2d');
     if(!ctx) return;
     let width=0,height=0,raf=0,last=0,elapsed=0;
-    const particles:Particle[]=Array.from({length:window.innerWidth<650?36:76},(_,i)=>({x:((i*137.508)%100)/100,y:((i*71.73)%100)/100,size:.9+(i%7)*.34,phase:i*2.39,drift:.4+(i%5)*.18}));
+    const particles:Particle[]=Array.from({length:window.innerWidth<650?68:145},(_,i)=>({x:((i*137.508)%100)/100,y:((i*71.73)%100)/100,size:1.1+(i%7)*.42,phase:i*2.39,drift:.4+(i%5)*.18}));
     const resize=()=>{width=window.innerWidth;height=window.innerHeight;const ratio=Math.min(window.devicePixelRatio||1,1.5);surface.width=Math.round(width*ratio);surface.height=Math.round(height*ratio);ctx.setTransform(ratio,0,0,ratio,0,0);};
     resize();
     function paint(particle:Particle,atmosphere:Atmosphere,opacity:number,time:number) {
@@ -32,8 +32,8 @@ export default function RoomAtmosphere({room,photo,paused,onToggle,controls=true
       const phase=particle.phase;
       const x=particle.x*width;
       const y=particle.y*height;
-      const centralFade=x>width*.18 && x<width*.78?.6:1;
-      const alpha=(.28+Math.sin(time*.7+phase)*.12)*opacity*centralFade;
+      const centralFade=x>width*.18 && x<width*.78?.82:1;
+      const alpha=(.52+Math.sin(time*.7+phase)*.16)*opacity*centralFade;
       ctx.save();ctx.translate(x,y);ctx.rotate(time*.1+phase);
       ctx.fillStyle=`rgba(${color.join(',')},${alpha})`;
       if(mode==='sakura') {
@@ -43,6 +43,10 @@ export default function RoomAtmosphere({room,photo,paused,onToggle,controls=true
         ctx.strokeStyle=`rgba(163,88,117,${alpha*.45})`;ctx.lineWidth=.45;ctx.stroke();
       } else if(mode==='petals'||mode==='leaves') {
         ctx.beginPath();ctx.ellipse(0,0,particle.size*3,particle.size*.9,Math.sin(time*.2+phase),0,Math.PI*2);ctx.fill();
+      } else if(mode==='rain') {
+        ctx.rotate(-time*.1-phase);ctx.strokeStyle=`rgba(${color.join(',')},${Math.min(.64,alpha*1.5)})`;ctx.lineWidth=Math.max(.6,particle.size*.6);ctx.beginPath();ctx.moveTo(0,-particle.size*7);ctx.lineTo(-particle.size*2,particle.size*9);ctx.stroke();
+      } else if(mode==='lamps') {
+        const glow=.5+.5*Math.sin(time*.7+phase);ctx.shadowColor=`rgba(${color.join(',')},${.5*glow})`;ctx.shadowBlur=24+particle.size*9;ctx.beginPath();ctx.arc(0,0,particle.size*(1+glow),0,Math.PI*2);ctx.fill();
       } else if(mode==='stars') {
         ctx.fillRect(-particle.size*2.2,-.4,particle.size*4.4,.8);ctx.fillRect(-.4,-particle.size*2.2,.8,particle.size*4.4);
       } else {
@@ -57,11 +61,13 @@ export default function RoomAtmosphere({room,photo,paused,onToggle,controls=true
       ctx.clearRect(0,0,width,height);
       const current=displayed.current;
       const desired=target.current;
-      const ease=1-Math.exp(-delta/1.1);
+      const ease=1-Math.exp(-delta/2.4);
       current.color=current.color.map((value,i)=>value+(desired.color[i]-value)*ease);
       current.speed+=(desired.speed-current.speed)*ease;
       for(const mode of modes)current.weights[mode]+=((mode===desired.mode?1:0)-current.weights[mode])*ease;
       const projector=current.weights.projector;
+      const lamps=current.weights.lamps;
+      if(lamps>.01){for(let i=0;i<3;i++){const x=width*(.17+i*.32);const y=height*(.2+(i%2)*.14);const pulse=.55+.2*Math.sin(elapsed*.6+i);const halo=ctx.createRadialGradient(x,y,2,x,y,width*.2);halo.addColorStop(0,`rgba(245,169,82,${.09*lamps*pulse})`);halo.addColorStop(1,'rgba(245,169,82,0)');ctx.fillStyle=halo;ctx.fillRect(x-width*.2,y-width*.2,width*.4,width*.4);}}
       if(projector>.01) {const beam=ctx.createLinearGradient(width*.1,0,width*.8,height);beam.addColorStop(0,`rgba(230,216,172,${.028*projector})`);beam.addColorStop(1,'rgba(230,216,172,0)');ctx.fillStyle=beam;ctx.beginPath();ctx.moveTo(width*.74,0);ctx.lineTo(width*.12,height);ctx.lineTo(width*.95,height);ctx.closePath();ctx.fill();}
       const direction=1-2*(current.weights.embers+current.weights.fireflies);
       const color=current.color.map(Math.round) as [number,number,number];

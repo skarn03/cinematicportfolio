@@ -3,13 +3,13 @@ import { motion, useReducedMotion } from 'framer-motion';
 import ThemeToggle from './ThemeToggle';
 import type { GalleryTheme } from './ThemeToggle';
 import { frame } from './catalog';
+import { contactLinks, mailtoHref } from '../data/contact';
 
-export function PortfolioHeader({active,theme='light',onThemeToggle=()=>{}}:{active:string;theme?:GalleryTheme;onThemeToggle?:()=>void}) {
-  const [menu,setMenu]=useState(false);
-  const selected=active.startsWith('room-')?'work':active;
-  return <header className="portfolio-header"><a className="portfolio-wordmark" href="#home" aria-label="Sahil Karn, home"><span className="portfolio-monogram">sk.</span><span>SAHIL KARN<small>PHOTOGRAPHER & FILMMAKER</small></span></a><button className="portfolio-menu-toggle" aria-expanded={menu} aria-controls="portfolio-navigation" onClick={()=>setMenu(!menu)}>{menu?'Close':'Menu'} <span>{menu?'−':'+'}</span></button><nav id="portfolio-navigation" className={menu?'portfolio-navigation is-open':'portfolio-navigation'} aria-label="Portfolio navigation">{[{id:'work',label:'Photographs'},{id:'film',label:'Film'},{id:'about',label:'About'},{id:'contact',label:'Contact'}].map(item=><a key={item.id} href={`#${item.id}`} aria-current={selected===item.id?'location':undefined} onClick={()=>setMenu(false)}>{item.label}</a>)}<a className="portfolio-work-link" href="#collaborate" onClick={()=>setMenu(false)}>Work with me <span>↗</span></a><ThemeToggle theme={theme} onToggle={onThemeToggle}/></nav></header>;
+export function PortfolioHeader({theme='light',onThemeToggle=()=>{},fullscreen=false,onToggleFullscreen=()=>{}}:{active:string;theme?:GalleryTheme;onThemeToggle?:()=>void;onNavigate?:(id:string)=>void;fullscreen?:boolean;onToggleFullscreen?:()=>void}) {
+  const [contactOpen,setContactOpen]=useState(false);
+  const instagram=contactLinks.socials.find(s=>s.icon==='instagram'&&s.url);
+  return <><header className="portfolio-header"><a className="portfolio-wordmark" href="#home" aria-label="Sahil Karn, home"><span className="portfolio-monogram">sk.</span><span>SAHIL KARN<small>PHOTOGRAPHER & FILMMAKER</small></span></a><div className="portfolio-navigation"><button className="portfolio-fullscreen-toggle" onClick={onToggleFullscreen} aria-pressed={fullscreen}>{fullscreen?"Exit full screen":"View full screen"}</button><button className="portfolio-work-link" onClick={()=>setContactOpen(true)}>Contact <span>?</span></button><ThemeToggle theme={theme} onToggle={onThemeToggle}/></div></header>{contactOpen&&<dialog className="contact-overlay" open aria-labelledby="contact-overlay-title" onClick={event=>{if(event.target===event.currentTarget)setContactOpen(false);}} onKeyDown={event=>{if(event.key==='Escape')setContactOpen(false);}}><div className="contact-overlay-panel"><button className="contact-overlay-close" onClick={()=>setContactOpen(false)} aria-label="Close contact overlay">Close ?</button><span>SAHIL KARN / AVAILABLE FOR SELECT PROJECTS</span><h2 id="contact-overlay-title">Let?s make<br/><em>something felt.</em></h2><p>Photography, cinematography, and creative collaborations.</p><a className="contact-overlay-email" href={mailtoHref()}>{contactLinks.email} ?</a>{instagram&&<a className="contact-overlay-social" href={instagram.url} target="_blank" rel="noopener">Instagram / {instagram.handle} ?</a>}</div></dialog>}</>;
 }
-
 export function CinematicOpening({onFilm,onFrameChange}:{onFilm:()=>void;onFrameChange?:(id:string)=>void}) {
   const reduced=useReducedMotion();
   const photo=frame('bloom-pond-figure');

@@ -1,4 +1,4 @@
-export type AtmosphereMode = 'fireflies'|'dust'|'petals'|'silver'|'projector'|'leaves'|'embers'|'stars'|'sakura';
+export type AtmosphereMode = 'fireflies'|'dust'|'petals'|'silver'|'projector'|'leaves'|'embers'|'stars'|'sakura'|'rain'|'lamps';
 export type RoomAtmosphere = {name:string;mode:AtmosphereMode;color:[number,number,number];speed:number;wash:string};
 export const roomAtmospheres: Record<string,RoomAtmosphere> = {
   home:{name:'The opening / fireflies',mode:'fireflies',color:[220,210,143],speed:.14,wash:'#b6bc6c'},

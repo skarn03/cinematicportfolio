@@ -4,3 +4,131 @@ html[data-theme=light] .spotlight-room-title h3{color:#7b805f}html[data-theme=li
 @media(max-width:1000px){.gallery-room.editorial-room .editorial-wall{width:calc(100% - 44px);gap:50px}.gallery-room.editorial-room .composition-triptych{gap:28px}.gallery-room.editorial-room .composition-offset-four{gap:24px}.spotlight-room-title h3{font-size:85px}.gallery-room.editorial-room .composition-dialogue{gap:7vw}.composition-spotlight .solo-image-caption blockquote{font-size:clamp(35px,5.5vw,60px)}}
 @media(max-width:650px){.gallery-room.editorial-room .editorial-wall{width:calc(100% - 28px);gap:42px}.gallery-room.editorial-room .composition-quartet,.gallery-room.editorial-room .composition-offset-four{grid-template-columns:1fr 1fr;gap:27px 16px}.gallery-room.editorial-room .composition-triptych{grid-template-columns:1fr 1fr;gap:26px 20px}.gallery-room.editorial-room .composition-triptych>.editorial-print:nth-child(2){margin-top:30px}.gallery-room.editorial-room .composition-triptych>.editorial-print:last-child{grid-column:1/-1;width:65%;justify-self:center;margin-top:0}.gallery-room.editorial-room .composition-offset-four>.editorial-print:nth-child(odd){margin-top:25px;rotate:0deg}.gallery-room.editorial-room .composition-offset-four>.editorial-print:nth-child(even){margin-top:0;rotate:0deg}.gallery-room.editorial-room .composition-dialogue{gap:25px}.gallery-room.editorial-room .composition-dialogue>.editorial-print:nth-child(2){margin-top:40px;width:100%}.gallery-room.editorial-room .composition-spotlight,.gallery-room.editorial-room .composition-panorama{padding-block:24px 10px;gap:22px}.gallery-room.editorial-room .composition-spotlight>.solo-exhibit,.gallery-room.editorial-room .composition-panorama>.solo-exhibit{width:min(96vw,calc(82svh * var(--image-ratio)));max-width:none}.spotlight-room-title>span{font-size:6px;letter-spacing:1.5px}.spotlight-room-title h3{font-size:clamp(53px,13vw,72px);line-height:.96;letter-spacing:-1px;margin-top:17px}.composition-spotlight .solo-image-caption,.composition-panorama .solo-image-caption{top:25px;left:23px;right:23px}.composition-spotlight .solo-image-caption blockquote,.composition-panorama .solo-image-caption blockquote{font-size:clamp(31px,8.3vw,43px);line-height:1.04;max-width:15ch}.composition-spotlight .solo-image-caption>span{font-size:6px}.composition-spotlight .solo-image-caption>small{font-size:5px}.nature-wall-note{font-size:26px;padding-top:3px}.exhibit-group .editorial-print figcaption{font-size:9px}.exhibit-group .editorial-print .image-whisper{font-size:17px}.viewer-bottom>div:last-child{gap:13px}.viewer-bottom button{font-size:7px}.viewer-bottom h2{max-width:19ch}}
 @media(prefers-reduced-motion:reduce){.exhibit-group>.editorial-print{rotate:0deg!important}.viewer-stage>img{transition:none}}
+
+/* Give each photograph enough room to read as an image, especially on phones. */
+.gallery-room.editorial-room .editorial-wall{width:min(1760px,calc(100% - 48px));gap:54px}
+.gallery-room.editorial-room .exhibit-group{gap:clamp(18px,2.2vw,38px)}
+.gallery-room.editorial-room .composition-quartet,.gallery-room.editorial-room .composition-offset-four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.gallery-room.editorial-room .composition-quartet .editorial-image,.gallery-room.editorial-room .composition-offset-four .editorial-image{min-height:clamp(230px,26vw,430px)}
+.gallery-room.editorial-room .composition-triptych .editorial-image{min-height:clamp(300px,35vw,560px)}
+.gallery-room.editorial-room .composition-dialogue .editorial-image{min-height:clamp(370px,42vw,680px)}
+.gallery-room.editorial-room .exhibit-group .print-preview,.gallery-room.editorial-room .exhibit-group .print-original{object-fit:cover}
+.gallery-room.editorial-room .exhibit-group figcaption{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;font-size:clamp(10px,.8vw,13px);color:#3e4938}
+.gallery-room.editorial-room .exhibit-group figcaption>span:first-child,.gallery-room.editorial-room .exhibit-group figcaption>span:last-child{color:#777866}
+.gallery-room.editorial-room .exhibit-group .image-whisper{color:#384531;text-shadow:0 1px 12px #eee9dd}
+@media(max-width:650px){
+  .gallery-room.editorial-room .editorial-wall{width:calc(100% - 24px);gap:36px}
+  .gallery-room.editorial-room .exhibit-group{gap:24px 12px;align-items:start}
+  .gallery-room.editorial-room .composition-quartet,.gallery-room.editorial-room .composition-offset-four,.gallery-room.editorial-room .composition-triptych{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .gallery-room.editorial-room .composition-quartet .editorial-image,.gallery-room.editorial-room .composition-offset-four .editorial-image,.gallery-room.editorial-room .composition-triptych .editorial-image{min-height:clamp(230px,68vw,340px)}
+  .gallery-room.editorial-room .composition-triptych>.editorial-print:last-child{grid-column:auto;width:100%}
+  .gallery-room.editorial-room .composition-dialogue{grid-template-columns:1fr;gap:20px;width:min(100%,520px)}
+  .gallery-room.editorial-room .composition-dialogue .editorial-image{min-height:clamp(380px,112vw,600px)}
+  .gallery-room.editorial-room .composition-dialogue>.editorial-print:nth-child(2){width:86%;justify-self:end;margin-top:0}
+  .gallery-room.editorial-room .composition-spotlight>.solo-exhibit,.gallery-room.editorial-room .composition-panorama>.solo-exhibit{width:calc(100vw - 24px)}
+  .gallery-room.editorial-room .exhibit-group figcaption{display:grid;grid-template-columns:auto 1fr;gap:2px 9px;padding-top:9px;font-size:11px;line-height:1.4;color:#35402f}
+  .gallery-room.editorial-room .exhibit-group figcaption>span:first-child{grid-row:1/3;font-size:9px;margin:0}
+  .gallery-room.editorial-room .exhibit-group figcaption>span:last-child{grid-column:2;font-size:9px}
+  .gallery-room.editorial-room .exhibit-group .image-whisper{font-size:clamp(17px,5vw,21px);line-height:1.35;color:#35402f;margin-top:11px}
+  .gallery-room.editorial-room .exhibit-group .solo-image-caption{background:linear-gradient(90deg,#171b16b8,#171b1655 70%,transparent);padding:10px 12px;border-radius:12px}
+}
+
+/* Street photographs read as a lead scene with three supporting details. */
+.layout-street-editorial .composition-quartet>.editorial-print:first-child{grid-column:span 2;grid-row:span 2}
+.layout-street-editorial .composition-quartet>.editorial-print:first-child .editorial-image{min-height:clamp(430px,48vw,760px)}
+.layout-street-editorial .composition-quartet>.editorial-print:nth-child(2),.layout-street-editorial .composition-quartet>.editorial-print:nth-child(3),.layout-street-editorial .composition-quartet>.editorial-print:nth-child(4){align-self:center}
+@media(max-width:650px){.layout-street-editorial .composition-quartet>.editorial-print:first-child{grid-column:1/-1;grid-row:auto}.layout-street-editorial .composition-quartet>.editorial-print:first-child .editorial-image{min-height:clamp(340px,105vw,540px)}}
+
+/* Chapter tones follow the section under the reader. */
+.exhibition-experience[data-active-room="room-nature"]{--chapter-accent:#a56d86;--chapter-wash:#d8bac1}
+.exhibition-experience[data-active-room="room-streets"]{--chapter-accent:#9a7048;--chapter-wash:#d7bd91}
+.exhibition-experience[data-active-room="room-people"]{--chapter-accent:#8b6e60;--chapter-wash:#c8aaa0}
+.exhibition-experience[data-active-room="room-after-dark"]{--chapter-accent:#6d7b88;--chapter-wash:#9aabb8}
+.exhibition-experience[data-active-room="room-quiet"]{--chapter-accent:#75826d;--chapter-wash:#c2cbb4}
+.exhibition-experience{--chapter-accent:#75826d;--chapter-wash:#c2cbb4}
+.exhibition-location{border-left:2px solid var(--chapter-accent);padding:9px 13px;background:color-mix(in srgb,var(--gallery-bg) 88%,transparent);backdrop-filter:blur(12px);transition:border-color .7s ease,background .7s ease}
+.exhibition-location>span:last-child{color:var(--chapter-accent);transition:color .7s ease}
+.exhibition-experience[data-active-room^="room-"] .gallery-room.editorial-room:before{content:"";position:absolute;z-index:-1;pointer-events:none;inset:0;background:radial-gradient(ellipse at 80% 12%,color-mix(in srgb,var(--chapter-wash) 15%,transparent),transparent 58%)}
+.layout-street-editorial .composition-quartet .editorial-image,.layout-street-editorial .composition-triptych .editorial-image{box-shadow:0 14px 38px #30271d1a;border:1px solid #514c3c20}
+
+/* Let the final portrait carry the contact chapter. */
+.portfolio-contact{min-height:88svh;display:grid;place-items:center;overflow:hidden}
+.portfolio-contact>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 44%;opacity:.32;filter:saturate(.75);transform:scale(1.015)}
+.portfolio-contact:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#e9e3d8ef,#e9e3d8c2 58%,#e9e3d87d),linear-gradient(0deg,#e9e3d8f2,transparent 35%);pointer-events:none}
+.portfolio-contact>.portfolio-page-width{position:relative;z-index:1}
+html[data-theme=dark] .portfolio-contact:after{background:linear-gradient(90deg,#101411ee,#101411ba 58%,#10141170),linear-gradient(0deg,#101411ee,transparent 35%)}
+@media(max-width:650px){.portfolio-contact{min-height:78svh}.portfolio-contact>img{object-position:62% center;opacity:.26}.portfolio-contact:after{background:linear-gradient(0deg,#e9e3d8f2,#e9e3d8c9 60%,#e9e3d86b)}}
+.contact-overlay{position:fixed;inset:0;z-index:1000;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:24px;border:0;background:#121712eF;color:#eee9dd;display:grid;place-items:center;backdrop-filter:blur(16px)}.contact-overlay-panel{position:relative;width:min(760px,100%);padding:clamp(35px,8vw,90px);border:1px solid #d3c9aa44;background:linear-gradient(140deg,#252b24,#171c18 72%);box-shadow:0 30px 100px #0005}.contact-overlay-panel>span{font-size:10px;letter-spacing:2px;color:#c8a9b5}.contact-overlay-panel h2{font-size:clamp(52px,10vw,100px);line-height:.95;font-weight:400;margin:28px 0}.contact-overlay-panel h2 em{color:#d4a8bb}.contact-overlay-panel p{font-size:16px;color:#d2d5c8}.contact-overlay-email,.contact-overlay-social{display:block;width:fit-content;margin-top:25px;color:#e6d8c4;text-decoration:none}.contact-overlay-close{position:absolute;right:22px;top:20px;color:#eee9dd;background:none;border:0;cursor:pointer}.portfolio-navigation{display:flex!important;position:static!important;align-items:center;gap:24px!important;background:transparent!important;padding:0!important;border:0!important}
+.portfolio-fullscreen-toggle{border:0;background:transparent;color:inherit;font:inherit;cursor:pointer;white-space:nowrap;padding:10px 0}.portfolio-fullscreen-toggle:hover,.portfolio-fullscreen-toggle:focus-visible{color:#ad758d}.portfolio-navigation>.portfolio-work-link{cursor:pointer;font:inherit}.contact-overlay{z-index:1000}.contact-overlay-panel{border-radius:4px}
+.gallery-room.layout-landscape-journal{background:linear-gradient(145deg,#e1d4d0,#d9ddd0 63%,#d7d1bd);color:#343d32}
+.gallery-room.layout-portrait-pairs{background:linear-gradient(145deg,#d6c4b9,#c8b7a8 65%,#b9aea3);color:#302b28}
+.gallery-room.layout-street-editorial{background:linear-gradient(150deg,#c7ae8e,#bba88f 55%,#a49379);color:#30291f}
+.gallery-room.layout-scattered-prints{background:linear-gradient(155deg,#bdc5b2,#c9c7ae 65%,#aaaF9a);color:#2d372e}
+.gallery-room.layout-night-cinema{background:linear-gradient(145deg,#28313b,#353743 62%,#4a403f);color:#f1e8dd}
+.gallery-room.layout-night-cinema .editorial-heading h2,.gallery-room.layout-night-cinema .editorial-heading p,.gallery-room.layout-night-cinema figcaption,.gallery-room.layout-night-cinema .image-whisper{color:#f1e8dd;text-shadow:none}
+.gallery-room.layout-night-cinema .exhibit-unlock{color:#e9dfd4}
+html[data-theme=dark] .gallery-room.layout-landscape-journal{background:linear-gradient(145deg,#292522,#242c27)}
+html[data-theme=dark] .gallery-room.layout-portrait-pairs{background:linear-gradient(145deg,#302a27,#272423)}
+html[data-theme=dark] .gallery-room.layout-street-editorial{background:linear-gradient(145deg,#30291f,#262624)}
+html[data-theme=dark] .gallery-room.layout-scattered-prints{background:linear-gradient(145deg,#26302b,#252923)}
+@media(max-width:650px){.portfolio-navigation{gap:10px!important}.portfolio-fullscreen-toggle{font-size:10px}.portfolio-navigation>.portfolio-work-link{font-size:10px!important;padding:9px!important;margin:0}.gallery-theme-toggle{width:auto!important;margin:0!important;padding:0!important}.gallery-theme-toggle>span{display:none}.contact-overlay-panel{padding:54px 26px 32px}.contact-overlay-panel h2{font-size:clamp(48px,12vw,74px)}.contact-overlay-email{font-size:13px;overflow-wrap:anywhere}}
+
+/* Each collection has its own room, with the atmosphere fading between them. */
+.gallery-room.editorial-room{position:relative;isolation:isolate;transition:background 1.4s ease,color 1.4s ease}
+.gallery-room.layout-landscape-journal{background:linear-gradient(145deg,#dbb3be 0%,#b5c3a7 58%,#9fac95 100%)}
+.gallery-room.layout-portrait-pairs{background:linear-gradient(145deg,#bd907d 0%,#aa8b80 45%,#7f7771 100%)}
+.gallery-room.layout-street-editorial{background:linear-gradient(145deg,#aa7c55 0%,#8f735e 54%,#6e7170 100%)}
+.gallery-room.layout-scattered-prints{background:linear-gradient(145deg,#7d9988 0%,#a3ad90 50%,#a99e82 100%)}
+.gallery-room.layout-night-cinema{background:linear-gradient(145deg,#152735 0%,#202b39 48%,#473a3b 100%)}
+.gallery-room.layout-portrait-pairs .editorial-heading h2,.gallery-room.layout-street-editorial .editorial-heading h2,.gallery-room.layout-scattered-prints .editorial-heading h2{color:#272c27}
+.gallery-room.layout-portrait-pairs .editorial-heading p,.gallery-room.layout-street-editorial .editorial-heading p,.gallery-room.layout-scattered-prints .editorial-heading p{color:#30372d}
+.gallery-room.layout-night-cinema .editorial-heading h2{color:#f3dfc4}
+.blooming-tree{position:absolute;right:3vw;top:65px;width:clamp(190px,24vw,390px);height:auto;color:#8e526e;opacity:.55;pointer-events:none;z-index:0;filter:drop-shadow(0 0 18px #f0b4ce70)}
+.layout-landscape-journal .editorial-heading,.layout-landscape-journal .editorial-wall{position:relative;z-index:1}
+.room-atmosphere{transition:opacity 1.2s ease}.room-light-wash{transition:background-color 2.2s ease,opacity 1.2s ease}
+@media(max-width:650px){.blooming-tree{width:170px;right:-25px;top:26px;opacity:.4}.gallery-room.layout-night-cinema .editorial-heading p{color:#e6d9cb}}
+@media(prefers-reduced-motion:reduce){.blooming-tree{display:none}.gallery-room.editorial-room,.room-atmosphere,.room-light-wash{transition:none}}
+
+/* The ending tone of each room becomes the opening tone of the next. */
+.gallery-room.layout-landscape-journal{background:linear-gradient(180deg,#e9e3d8 0%,#d8bdc0 23%,#b8b7a5 70%,#b7a99d 100%)}
+.gallery-room.layout-portrait-pairs{background:linear-gradient(180deg,#b7a99d 0%,#bd9c8e 48%,#a98b71 100%)}
+.gallery-room.layout-street-editorial{background:linear-gradient(180deg,#a98b71 0%,#a68163 38%,#8b9388 100%)}
+.gallery-room.layout-scattered-prints{background:linear-gradient(180deg,#8b9388 0%,#8fa393 48%,#566d77 100%)}
+.gallery-room.layout-night-cinema{background:linear-gradient(180deg,#566d77 0%,#39495b 32%,#1b2937 76%,#171d27 100%)}
+.gallery-room.layout-night-cinema .editorial-heading h2,.gallery-room.layout-night-cinema .editorial-heading p,.gallery-room.layout-night-cinema figcaption,.gallery-room.layout-night-cinema .image-whisper{color:#f5eadb}
+html[data-theme=dark] .gallery-room.layout-landscape-journal{background:linear-gradient(180deg,#242521,#342b2c 47%,#36302c)}
+html[data-theme=dark] .gallery-room.layout-portrait-pairs{background:linear-gradient(180deg,#36302c,#3a2c27 52%,#342b25)}
+html[data-theme=dark] .gallery-room.layout-street-editorial{background:linear-gradient(180deg,#342b25,#3a3128 50%,#303934)}
+html[data-theme=dark] .gallery-room.layout-scattered-prints{background:linear-gradient(180deg,#303934,#304038 50%,#273944)}
+html[data-theme=dark] .gallery-room.layout-night-cinema{background:linear-gradient(180deg,#273944,#202d3a 48%,#121a25)}
+
+/* Warm gallery paper stays consistent; each room's small installation carries its mood. */
+html[data-theme=light] .gallery-room.editorial-room{background:#e9e5dd;color:#343c33}
+html[data-theme=light] .gallery-room.layout-night-cinema .editorial-heading h2,html[data-theme=light] .gallery-room.layout-night-cinema .editorial-heading p,html[data-theme=light] .gallery-room.layout-night-cinema figcaption,html[data-theme=light] .gallery-room.layout-night-cinema .image-whisper{color:#343c33;text-shadow:none}
+html[data-theme=light] .gallery-room.layout-night-cinema .exhibit-unlock{color:#465044}
+.room-motif{position:absolute;top:80px;right:4vw;width:230px;height:220px;pointer-events:none;z-index:0;opacity:.7}
+.room-motif span{position:absolute;display:block}
+.motif-portrait-pairs span{border:1px solid #ba8e78;border-radius:48% 52% 44% 56%;filter:drop-shadow(0 0 12px #cc9a7566);animation:portrait-breathe 7s ease-in-out infinite}
+.motif-portrait-pairs span:nth-child(1){inset:20px 20px 15px 45px}.motif-portrait-pairs span:nth-child(2){inset:39px 41px 39px 67px;animation-delay:1s}.motif-portrait-pairs span:nth-child(3){inset:64px 62px 64px 89px;background:#d2aa8d28;animation-delay:2s}
+.motif-street-editorial span:first-child{width:3px;height:165px;left:110px;top:44px;background:#7a6552;box-shadow:1px 0 4px #6e594a44}.motif-street-editorial span:first-child:before{content:"";position:absolute;width:70px;height:4px;top:0;left:-1px;background:#7a6552}.motif-street-editorial span:nth-child(2){width:16px;height:9px;left:171px;top:46px;border-radius:0 0 50% 50%;background:#e8b471;box-shadow:0 0 13px 4px #e8b471a0,0 0 65px 30px #e8b47152;animation:lamp-breathe 5s ease-in-out infinite}.motif-street-editorial span:nth-child(3){width:105px;height:25px;left:125px;top:190px;border-radius:50%;background:#d6b07b42;filter:blur(10px);animation:lamp-breathe 5s ease-in-out infinite}
+.motif-scattered-prints span{border:1px solid #839b87;border-radius:50%;width:180px;height:45px;left:24px;top:130px;transform:rotate(-8deg);animation:ripple-breathe 5s ease-out infinite}.motif-scattered-prints span:nth-child(2){animation-delay:1.5s}.motif-scattered-prints span:nth-child(3){animation-delay:3s}
+.motif-night-cinema span{width:13px;height:13px;border-radius:50%;background:#e7b87a;box-shadow:0 0 18px 8px #e7b87a8a,0 0 70px 30px #e7b87a30;animation:lamp-breathe 7s ease-in-out infinite}.motif-night-cinema span:nth-child(1){left:40px;top:45px}.motif-night-cinema span:nth-child(2){left:150px;top:110px;transform:scale(.65);animation-delay:2s}.motif-night-cinema span:nth-child(3){left:90px;top:180px;transform:scale(.4);animation-delay:4s}
+@keyframes lamp-breathe{0%,100%{opacity:.45;filter:brightness(.8)}50%{opacity:1;filter:brightness(1.25)}}@keyframes portrait-breathe{0%,100%{transform:scale(.96);opacity:.35}50%{transform:scale(1.03);opacity:.75}}@keyframes ripple-breathe{0%{transform:rotate(-8deg) scale(.4);opacity:.65}100%{transform:rotate(-8deg) scale(1.2);opacity:0}}
+@media(max-width:650px){.room-motif{width:140px;height:145px;right:0;top:38px;transform:scale(.65);transform-origin:top right;opacity:.55}.motif-street-editorial{right:25px}}
+@media(prefers-reduced-motion:reduce){.room-motif span{animation:none!important}}
+
+/* Each study has a recognizable setting, while the gallery surface remains calm. */
+html[data-theme=light] .gallery-room.layout-landscape-journal{background:radial-gradient(ellipse at 88% 8%,#f5bcd7 0%,transparent 32%),radial-gradient(ellipse at 8% 62%,#a9c6a7 0%,transparent 40%),linear-gradient(165deg,#f3e6e5,#d6e1d1 66%,#e9e5dd)}
+html[data-theme=light] .gallery-room.layout-portrait-pairs{background:radial-gradient(ellipse at 12% 24%,#e9ba91 0%,transparent 37%),radial-gradient(ellipse at 88% 72%,#c4a0a0 0%,transparent 42%),linear-gradient(160deg,#f0ded1,#dfc8bd 65%,#e9e5dd)}
+html[data-theme=light] .gallery-room.layout-street-editorial{background:radial-gradient(ellipse at 84% 12%,#e7b778 0%,transparent 36%),linear-gradient(105deg,transparent 0 44%,#9babb326 45% 46%,transparent 47% 55%,#9babb326 56% 57%,transparent 58%),linear-gradient(165deg,#ead7bb,#c9c9bd 65%,#d6dcd9)}
+html[data-theme=light] .gallery-room.layout-scattered-prints{background:radial-gradient(ellipse at 50% 52%,#b2cdb8 0%,transparent 39%),radial-gradient(ellipse at 84% 16%,#d4dbc2 0%,transparent 33%),linear-gradient(170deg,#e5ecdf,#c5d4ce 68%,#e0e6df)}
+html[data-theme=light] .gallery-room.layout-night-cinema{background:radial-gradient(ellipse at 78% 21%,#cf986b73 0%,transparent 26%),radial-gradient(ellipse at 18% 75%,#667e9873 0%,transparent 37%),linear-gradient(165deg,#41566b,#263748 63%,#1c2b39);color:#f4ebdf}
+html[data-theme=light] .gallery-room.layout-night-cinema .editorial-heading h2,html[data-theme=light] .gallery-room.layout-night-cinema .editorial-heading p,html[data-theme=light] .gallery-room.layout-night-cinema figcaption,html[data-theme=light] .gallery-room.layout-night-cinema .image-whisper,html[data-theme=light] .gallery-room.layout-night-cinema .exhibit-unlock{color:#f4ebdf}
+html[data-theme=light] .gallery-room.layout-night-cinema .spotlight-room-title h3{color:#f3d4af}
+.gallery-room.layout-landscape-journal .blooming-tree{width:clamp(260px,32vw,510px);opacity:.83;filter:drop-shadow(0 0 20px #e693bb99)}
+.room-motif{width:clamp(240px,25vw,410px);height:300px;opacity:.95}
+.motif-street-editorial{filter:drop-shadow(0 0 30px #e9b875a8)}
+.motif-night-cinema{filter:drop-shadow(0 0 38px #edae7b88)}
+.room-atmosphere>canvas{opacity:1!important}
+.room-light-wash{opacity:.08!important}
+@media(max-width:650px){.room-motif{width:190px;height:210px;opacity:.8}.gallery-room.layout-landscape-journal .blooming-tree{width:210px;opacity:.64}.room-atmosphere>canvas{opacity:.9!important}}

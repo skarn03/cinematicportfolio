@@ -33,6 +33,9 @@ export default function ExhibitionExperience() {
   const [viewer,setViewer]=useState<{id:string;category:Category}|null>(null);
   const [active,setActive]=useState('home');
   const [paused,setPaused]=useState(false);
+  const [portfolioFullscreen,setPortfolioFullscreen]=useState(false);
+  useEffect(()=>{const sync=()=>setPortfolioFullscreen(!!document.fullscreenElement);document.addEventListener('fullscreenchange',sync);return()=>document.removeEventListener('fullscreenchange',sync);},[]);
+  function togglePortfolioFullscreen(){if(document.fullscreenElement)void document.exitFullscreen?.();else void document.documentElement.requestFullscreen?.().catch(()=>{});}
   const [theme,setTheme]=useState<GalleryTheme>(()=>{try{return window.localStorage.getItem('cinematic-gallery-theme')==='dark'?'dark':'light';}catch{return 'light';}});
   useEffect(()=>{document.documentElement.dataset.theme=theme;document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme==='light'?'#e9e3d8':'#0d100f');try{window.localStorage.setItem('cinematic-gallery-theme',theme);}catch{}},[theme]);
   const [heroPhoto,setHeroPhoto]=useState('bloom-pond-figure');
@@ -59,6 +62,14 @@ export default function ExhibitionExperience() {
   function openPanel(next:Panel|'film'){setPanel(next);window.history.replaceState(null,'',`#${next==='film'?'watch':next}`);}
   function closePanel(){setPanel(null);window.history.replaceState(null,'',`#${active}`);}
   function visit(category:Category){closePanel();requestAnimationFrame(()=>{const target=document.getElementById(roomId(category));if(target)target.scrollIntoView({behavior:reduced?'instant':'smooth'});});}
+  function navigateTo(id:string){
+    const target=document.getElementById(id);
+    if(!target)return;
+    window.history.pushState(null,'',`#${id}`);
+    const top=target.getBoundingClientRect().top+window.scrollY-100;
+    if(lenis.current&&!reduced){lenis.current.scrollTo(top,{duration:1.15,lock:true,force:true});}
+    else window.scrollTo({top:Math.max(0,top),behavior:reduced?'auto':'smooth'});
+  }
   function openPhoto(id:string,category:Category){
     setViewer({id,category});
     if(!document.fullscreenElement&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().then(()=>{fullscreenOwned.current=true;}).catch(()=>{});
@@ -68,7 +79,7 @@ export default function ExhibitionExperience() {
   return <div className="exhibition-experience" data-active-room={active} data-theme={theme}>
     <a href="#room-nature" className="exhibition-skip">Skip to the photographs</a>
     <RoomAtmosphere room={atmosphere} photo={currentPhoto} paused={paused||!!panel||!!viewer} onToggle={()=>setPaused(!paused)}/><GalleryCursor/>
-    <PortfolioHeader active={active} theme={theme} onThemeToggle={()=>setTheme(theme==='light'?'dark':'light')}/>
+    <PortfolioHeader active={active} theme={theme} onThemeToggle={()=>setTheme(theme==='light'?'dark':'light')} onNavigate={navigateTo} fullscreen={portfolioFullscreen} onToggleFullscreen={togglePortfolioFullscreen}/>
     <main className="exhibition-flow">
       <CinematicOpening onFilm={()=>openPanel('film')} onFrameChange={setHeroPhoto}/>
       <section id="work" className="portfolio-photographs" aria-labelledby="photographs-heading"><Reveal className="portfolio-section-heading portfolio-page-width"><div><span>01 / THE COMPLETE COLLECTION</span><h2 id="photographs-heading">Photographs.<br/><em>A world of stories.</em></h2></div><div><p>All {frames.length} photographs. Every original, every new frame.<br/>Three or four frames at a time. More unfold as you scroll.</p><button className="photography-index-link" onClick={()=>openPanel('index')}>Index <span>{frames.length}</span></button></div></Reveal>
