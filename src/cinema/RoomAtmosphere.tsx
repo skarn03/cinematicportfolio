@@ -23,7 +23,7 @@ export default function RoomAtmosphere({room,photo,paused,onToggle,controls=true
     const ctx=surface.getContext('2d');
     if(!ctx) return;
     let width=0,height=0,raf=0,last=0,elapsed=0;
-    const particles:Particle[]=Array.from({length:window.innerWidth<650?68:145},(_,i)=>({x:((i*137.508)%100)/100,y:((i*71.73)%100)/100,size:1.1+(i%7)*.42,phase:i*2.39,drift:.4+(i%5)*.18}));
+    const particles:Particle[]=Array.from({length:window.innerWidth<650?42:92},(_,i)=>({x:((i*137.508)%100)/100,y:((i*71.73)%100)/100,size:1.1+(i%7)*.42,phase:i*2.39,drift:.4+(i%5)*.18}));
     const resize=()=>{width=window.innerWidth;height=window.innerHeight;const ratio=Math.min(window.devicePixelRatio||1,1.5);surface.width=Math.round(width*ratio);surface.height=Math.round(height*ratio);ctx.setTransform(ratio,0,0,ratio,0,0);};
     resize();
     function paint(particle:Particle,atmosphere:Atmosphere,opacity:number,time:number) {
@@ -33,12 +33,12 @@ export default function RoomAtmosphere({room,photo,paused,onToggle,controls=true
       const x=particle.x*width;
       const y=particle.y*height;
       const centralFade=x>width*.18 && x<width*.78?.82:1;
-      const alpha=(.52+Math.sin(time*.7+phase)*.16)*opacity*centralFade;
+      const alpha=(.42+Math.sin(time*.7+phase)*.12)*opacity*centralFade;
       ctx.save();ctx.translate(x,y);ctx.rotate(time*.1+phase);
       ctx.fillStyle=`rgba(${color.join(',')},${alpha})`;
       if(mode==='sakura') {
         const size=particle.size*3.8;ctx.scale(1,.62+Math.sin(time*.8+phase)*.3);
-        ctx.fillStyle=`rgba(${color.join(',')},${Math.min(.75,alpha*1.7)})`;
+        ctx.fillStyle=`rgba(${color.join(',')},${Math.min(.62,alpha*1.5)})`;
         ctx.beginPath();ctx.moveTo(0,-size);ctx.bezierCurveTo(-size*1.25,-size*.6,-size*.85,size*.6,0,size);ctx.bezierCurveTo(size*.95,size*.2,size*1.1,-size*.65,size*.3,-size*.85);ctx.lineTo(size*.05,-size*.55);ctx.closePath();ctx.fill();
         ctx.strokeStyle=`rgba(163,88,117,${alpha*.45})`;ctx.lineWidth=.45;ctx.stroke();
       } else if(mode==='petals'||mode==='leaves') {

@@ -18,6 +18,7 @@ import './final-polish.css';
 import type { GalleryTheme } from './ThemeToggle';
 import './spring-gallery.css';
 import './exhibit-rhythm.css';
+import './gallery-refinement.css';
 
 const FullscreenViewer=lazy(()=>import('./FullscreenViewer'));
 const ExhibitionPanel=lazy(()=>import('./ExhibitionPanel'));
@@ -82,7 +83,7 @@ export default function ExhibitionExperience() {
     <PortfolioHeader active={active} theme={theme} onThemeToggle={()=>setTheme(theme==='light'?'dark':'light')} onNavigate={navigateTo} fullscreen={portfolioFullscreen} onToggleFullscreen={togglePortfolioFullscreen}/>
     <main className="exhibition-flow">
       <CinematicOpening onFilm={()=>openPanel('film')} onFrameChange={setHeroPhoto}/>
-      <section id="work" className="portfolio-photographs" aria-labelledby="photographs-heading"><Reveal className="portfolio-section-heading portfolio-page-width"><div><span>01 / THE COMPLETE COLLECTION</span><h2 id="photographs-heading">Photographs.<br/><em>A world of stories.</em></h2></div><div><p>All {frames.length} photographs. Every original, every new frame.<br/>Three or four frames at a time. More unfold as you scroll.</p><button className="photography-index-link" onClick={()=>openPanel('index')}>Index <span>{frames.length}</span></button></div></Reveal>
+      <section id="work" className="portfolio-photographs" aria-labelledby="photographs-heading"><Reveal className="portfolio-section-heading portfolio-page-width"><div><span>01 / THE COMPLETE COLLECTION</span><h2 id="photographs-heading">Photographs.<br/><em>A world of stories.</em></h2></div><div><p>All {frames.length} photographs. Every original, every new frame.<br/>New arrangements unfold as you scroll.</p><button className="photography-index-link" onClick={()=>openPanel('index')}>Index <span>{frames.length}</span></button></div></Reveal>
       {rooms.map(room=><div key={room.id} data-exhibition-room id={`${room.id}-observer`} className="room-observer" data-room-target={room.id}><GalleryRoom id={room.id} number={room.number} title={room.category} subtitle={roomNotes[room.category]} photos={room.photos} onActivePhoto={notePhoto} onOpen={id=>openPhoto(id,room.category)}/></div>)}
       </section>
       <PortfolioSections onFilm={()=>openPanel('film')} onPhoto={id=>openPhoto(id,frame(id).category)}/>
